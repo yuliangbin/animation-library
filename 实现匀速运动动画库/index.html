@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>动画</title>
+		<style>
+		
+			* {
+				padding:0;
+				margin:0;
+				text-decoration:none;
+			}
+			#div {
+				position:absolute;
+				left:0;
+				top:0;
+				width:100px;
+				height:100px;
+				background:lightblue;
+				opacity:1;
+			}
+			.btn {
+				position:absolute;
+				top:200px;
+				left:200px;
+			}
+			.btn input {
+				display:inline-block;
+				width:50px;
+				height:20px;
+				text-align:center;
+				line-height:20px;
+				outline:none;
+			}
+			
+		</style>
+	</head>
+	<body>	
+		<div id="div"></div>
+		<script src="jquery-3.3.1.js"></script>
+		<script src="tween.js"></script>
+		
+		<script>
+			var div = $('#div');
+			var target = {
+				left:1000,
+				top:500,
+				width:0,
+				height:0,
+				opacity:0,
+				
+			};
+			tween.move(div,target,500)
+			
+			
+		
+		</script>
+	</body>
+
+</html>

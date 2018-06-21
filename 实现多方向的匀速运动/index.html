@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>动画</title>
+		<style>
+		
+			* {
+				padding:0;
+				margin:0;
+				text-decoration:none;
+			}
+			.div {
+				position:absolute;
+				left:0;
+				top:0;
+				width:100px;
+				height:100px;
+				background:lightblue;
+			}
+		</style>
+	</head>
+	<body>	
+		<div class="div" id="div"></div>
+		<script src="jquery-3.3.1.js"></script>
+		<script>
+		/**
+		 * 封装一个线性运动的函数
+		 * t表示time:已经运动的时间
+		 * b表示beginLocation:开始运动时的位置
+		 * c表示运动的总距离
+		 * d表示duration:总共运动多长时间
+		 * 返回值为运动时间为time时所在的位置
+		 */
+			function Linear(b,c,t,d) {
+					return c * t / d + b;
+			}
+		
+			var div = $('#div'),
+				beginLeft = parseInt(div.css("left")),	
+				beginTop = parseInt(div.css("top"));
+			var targetLeft = 1000,//目标位置距左端距离
+				targetTop = 500;//目标位置距顶端距离
+			var changeLeft = targetLeft - beginLeft,//水平方向移动距离
+				changeTop = targetTop - beginTop;//垂直方向移动距离
+			var time = 0,
+				duration = 500;//运动总时间
+			div.timer = setInterval(function () {
+				time += 10;
+				if (time >= duration) {
+					div.css({
+						left : targetLeft,
+						top : targetTop
+					});
+					clearInterval(div.timer);
+					return ;
+				}
+				var curLeft = Linear(beginLeft,changeLeft,time,duration);
+				
+				var curTop = Linear(beginTop,changeTop,time,duration);
+				div.css('left',curLeft);
+				div.css('top',curTop);
+				
+			},100)
+			
+			
+		</script>
+	</body>
+
+</html>

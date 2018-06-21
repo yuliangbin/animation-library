@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>动画</title>
+		<style>
+		
+			* {
+				padding:0;
+				margin:0;
+				text-decoration:none;
+			}
+			.div {
+				position:absolute;
+				left:300px;
+				width:100px;
+				height:100px;
+				background:lightblue;
+			}
+			.btn {
+				position:absolute;
+				top:200px;
+				left:200px;
+			}
+			.btn button {
+				display:inline-block;
+				width:50px;
+				height:20px;
+				text-align:center;
+				line-height:20px;
+				outline:none;
+			}
+			
+		</style>
+	</head>
+	<body>	
+		<div class="div" id="div"></div>
+		<div class="btn">
+			<button id="left">left</button>
+			<button id="right">right</button>
+		</div>
+	</body>
+	<script>
+		function move(target) {
+			clearTimeout(timer);
+			<!-- 我们知道作用域堆积是由于每次执行函数时都需要传递参数导致的。有没有什么方法可以不用传递参数呢？ -->
+			<!-- 我们可以将函数实现的逻辑代码再用一个函数_move包含起来，而这个函数不再需要形参，所以也就不用形成层层闭包(move函数每次都执行)，只要形成一个闭包就可以了(即move只执行一次)。 -->
+			function _move() {
+				var curP = div.style.left;
+				if (target > parseInt(curP)) {
+					if (parseInt(div.style.left) + step > width) {
+						div.style.left = width + 'px';
+						clearTimeout(timer);
+						return ;
+					}
+					div.style.left = parseInt(div.style.left) + step + "px";
+				} else if(target < parseInt(curP)) {
+					if (parseInt(div.style.left) - step < 0) {
+						div.style.left = 0;
+						clearTimeout(timer);
+						return ;
+					}
+					div.style.left = parseInt(div.style.left) - step + "px";
+				} else {
+					return ;
+				}
+				timer = setTimeout(_move,100);
+			}
+			
+			_move();
+		}
+		let left = document.getElementById("left");
+		let right = document.getElementById("right");
+		let div = document.getElementById("div");
+		let step = 10;	//每次移动的距离
+		let width = document.documentElement.clientWidth - div.offsetWidth;	//矩形块移动到最右端的宽度
+		div.style.left = div.offsetWidth + 'px';
+		let timer = null;
+		//我们在点击往左往右运动的时候其实是存在动画的切换的。
+		//那么为了保证同一个时间只能有一个动画在运行(下一个动画运行，自动清除上一个动画)，需要保证当前元素所有接受动画定时器返回值的变量共享。
+		//那么如何实现共享呢？可以把这个值放在全局变量里，亦可以把这个值放在当前元素的自定义属性上(div.timer,有兴趣的同学可以自己实现以下，非常简单)
+		//其实放在元素的属性上比设置成全局变量更好，因为timer的作用仅仅是清除定时器，可能会造成全局变量的污染
+		left.onclick = function() {
+			move(0);
+		}
+		right.onclick = function() {
+			move(width);
+		}
+		
+		
+	</script>
+	
+
+</html>

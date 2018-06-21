@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>动画</title>
+		<style>
+		
+			* {
+				padding:0;
+				margin:0;
+				text-decoration:none;
+			}
+			.div {
+				position:absolute;
+				left:300px;
+				width:100px;
+				height:100px;
+				background:lightblue;
+			}
+			.btn {
+				position:absolute;
+				top:200px;
+				left:200px;
+			}
+			.btn button {
+				display:inline-block;
+				width:50px;
+				height:20px;
+				outline:none;
+			}
+			
+		</style>
+	</head>
+	<body>	
+		<div class="div" id="div"></div>
+		<div class="btn">
+			<button id="left">left</button>
+			<button id="right">right</button>
+		</div>
+	</body>
+	<script>
+		let left = document.getElementById("left");
+		let right = document.getElementById("right");
+		let div = document.getElementById("div");
+		let step = 10;	//每次移动的距离
+		let width = document.documentElement.clientWidth - div.offsetWidth;	//矩形块移动到最右端的宽度
+		div.style.left = div.offsetWidth + 'px';
+		let timer = null;//timer为定时器的标志，在敲完代码后不妨思考一下为什么这里要设置成全局变量，声明为局部变量可不可以?从left、right点击事件切换动画考虑
+		left.onclick = function() {
+			move(0);
+		}
+		right.onclick = function() {
+			move(width);
+		}
+		
+		function move(target) {
+			clearTimeout(timer);
+			let curP = parseInt(div.style.left);
+			if (target < curP){
+				if (parseInt(div.style.left) - step < 0) {
+					div.style.left = 0;
+					clearTimeout(timer);
+					return ;
+				}
+				div.style.left = parseInt(div.style.left) - step + 'px';
+			} else if (target > curP) {
+				if (parseInt(div.style.left) + step > width) {
+					div.style.left = width + 'px';
+					clearTimeout(timer);
+					return ;
+				}
+				div.style.left = parseInt(div.style.left) + step + 'px';
+			} else {
+				return ;
+			}
+		
+			timer = setTimeout(function() {
+				move(target);
+			},100);
+			<!-- 从作用域链的角度思考一下在setTimeout()定时器里设置move(target)函数有什么问题 -->
+			<!-- 这样容易造成作用域的堆积，因为每一次执行的时候，都需要先执行一次匿名函数(形成一个私有作用域)，在匿名函数中再执行move，但是在move中需要用到的数据值(target)在第一次执行的move方法中，这就需要把匿名函数形成的作用域作为跳板找到之前的，这样就导致了匿名函数形成的这个私有作用域不能被销毁。 -->
+		}
+	</script>
+	
+
+</html>
